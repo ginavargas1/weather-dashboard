@@ -1,4 +1,12 @@
-// search bar for location 
+// variables for search for content, history
+var searchFormEl = document.querySelector('#search-input');
+
+    function handleSearchFormSubmit(event) {
+  event.preventDefault();
+
+searchFormEl.addEventListener('submit', handleSearchFormSubmit);
+
+
 // Weather API 
 // add local storage to save previous search 
 // Weather need to include full UV index 
