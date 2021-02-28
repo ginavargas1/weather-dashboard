@@ -7,6 +7,17 @@ var currentWindSpeed = $("#wind-speed");
 var uvIndex = $("#uv-index");
 var currentDate = $("#today");
 var currentTemp = $("#weather");
+var sCity = [];
+var city = "";
+
+function find(c){
+  for (var i=0; i<sCity.length; i++){
+    if(c.toUpperCase()===sCity[i]){
+      return -1;
+    }
+  }
+  return 1;
+}
 
 function handleSearchFormSubmit() {
 
@@ -16,7 +27,8 @@ function handleSearchFormSubmit() {
   function displayWeather(event){
     event.preventDefault();
     if(searchFormEl.val().trim()!=="") {
-      city=searchCiy.val().trim();
+      city=searchFormEl.val().trim();
+      currentTemp(city);
     }
   }
 
@@ -34,6 +46,9 @@ function handleSearchFormSubmit() {
   }).then(function (response) {
     console.log('Ajax Reponse \n-------------');
     console.log(response);
+    var weatherIcon = response.weather[0].icon;
+    var iconUrl= "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
+
     currentDate.text(new Date().getDate("M/D/YYYY"))
     currentTemp
   .text(response.list[0].main.temp + " F")
@@ -47,22 +62,21 @@ function handleSearchFormSubmit() {
         .text(data.main.temp + " F")
       }
        
-      var weatherIcon = $("<img>");
-        weatherIcon.attr(
-          "src",
+      // var weatherIcon = $("<img>");
+      //   weatherIcon.attr(
+      //     "src",
           
-          "http://openweathermap.org/img/wn/" + weather[0].ui-icon + ".png", 
+      //     "http://openweathermap.org/img/wn/" + weather[0].ui-icon + ".png", 
             
-          console.log(icon),
-        console.log(weatherIcon)
-        )
-          // + weather.weather[0].icon + ".png"
-        $("#currentDate-icon").empty();
-        $("#currentDate-icon").append(weatherIcon);
+      //     console.log(icon),
+      //   console.log(weatherIcon)
+      //   )
+      //     // + weather.weather[0].icon + ".png"
+      //   $("#currentDate-icon").empty();
+      //   $("#currentDate-icon").append(weatherIcon);
 
     }
 
-s
   });
 }
 searchButton.on('click', () => {
