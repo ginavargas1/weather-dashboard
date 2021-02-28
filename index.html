@@ -34,15 +34,20 @@
 
             </aside>
 
-                  <!-- search info -->
+                  <!-- search bar -->
             <div class="col-lg-9">
 
                 <div class="card mb-3">
 
+                <!-- current search info -->
                     <div class="card-body">
-                      <h5 class="card-title"></h5>
-                      <div id="today" class="mt-3"></div>
-                      <div id="weather" ></div>
+                      <h5 id="current-city"></h5>
+                      <h3 class="city-name mt-3" id="today"></span></h3>
+                      <p>Temperature: <span id="weather"></span></p>
+                      <p>Humidity: <span id="humidity"></span></p>
+                      <p>Wind Speed: <span id="wind-speed"></span></p>
+                      <p>UV Index: <span id="uv-index"></span></p>
+                      <span id="current-icon"></span>
                     </div>
                   </div>
 
@@ -53,55 +58,62 @@
                 <h4>5 Day Forcast</h4>
                 <div class="card-group">
                     <div class="card">
-                      <img src="..." class="card-img-top" alt="...">
                       <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <p id="future-date0"></p>
+                        <p id="future-image0"></p>
+                        <p>Temp: <span id="future-temp0"></span></p>
+                        <p>Humidity: <span id="future-humidity0"></span></p>
+
                       </div>
                     </div>
+
                     <div class="card">
-                      <img src="..." class="card-img-top" alt="...">
                       <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <p id="future-date1"></p>
+                        <p id="future-image1"></p>
+                        <p>Temp: <span id="future-temp1"></span></p>
+                        <p>Humidity: <span id="future-humidity1"></span></p>
+
                       </div>
                     </div>
+
                     <div class="card">
-                      <img src="..." class="card-img-top" alt="...">
                       <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <p id="future-date2"></p>
+                        <p id="future-image2"></p>
+                        <p>Temp: <span id="future-temp2"></span></p>
+                        <p>Humidity: <span id="future-humidity2"></span></p>
+
                       </div>
                     </div>
+                    
                     <div class="card">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-                        </div>
+                      <div class="card-body">
+                        <p id="future-date3"></p>
+                        <p id="future-image3"></p>
+                        <p>Temp: <span id="future-temp3"></span></p>
+                        <p>Humidity: <span id="future-humidity3"></span></p>
                       </div>
-                      <div class="card">
-                        <img src="..." class="card-img-top" alt="...">
-                        <div class="card-body">
-                          <h5 class="card-title">Card title</h5>
-                          <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-                        </div>
+                    </div>
+
+                    <div class="card">
+                      <div class="card-body">
+                        <p id="future-date4"></p>
+                        <p id="future-image4"></p>
+                        <p>Temp: <span id="future-temp4"></span></p>
+                        <p>Humidity: <span id="future-humidity4"></span></p>
+                    </div>
                   </div>
-                  
-
-
 
             </div>
 
-            </div>
+           </div>
 
       </div>
 
-<!-- jquery/javascript -->
+<!-- jquery/javascript/ moment -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script> -->
  <script src="./assets/script.js"></script>
 </body>
 </html>
