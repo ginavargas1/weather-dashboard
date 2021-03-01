@@ -30,10 +30,7 @@ function displayWeather(event) {
 }
 
 function currentWeather (city){
-  var urlReq = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial" + "&appid=" + apiKey;
-
-  var urlReq2 = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial" + "&appid=" + apiKey;
-  console.log(urlReq2);
+  var urlReq = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial" + "&appid=" + apiKey;
 
   $.ajax ({
     url:urlReq,
@@ -44,43 +41,29 @@ function currentWeather (city){
     console.log(response);
 
     currentTemp
-    .text(response.list[0].main.temp + " F")
+    .text(response.main.temp_max + " F")
 
-    var weatherIcon= response.list[0].weather[0].icon;
+    var weatherIcon= response.weather[0].icon;
     var iconURL = "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
 
     var date = currentDate.text(new Date().getDate())
     $(currentCity).html(response.name + "("+date+")" + "<img src=" + iconURL + ">");
 
-    $(currentHumidity).html(response.list[0].main.humidity+"%");
+    $(currentHumidity).html(response.main.humidity+"%");
     
-    var windSpeed = response.list[0].wind.speed;
+    var windSpeed = response.wind.speed;
     var windMph = (windSpeed*2.237).toFixed(1);
     $(currentWindSpeed).html(windMph + "MPH")
+     
+    // uvIndex (response.coord.lon, response.coord.lat);
+    // forcast(response.id);
+    // if else statement goes below
 
-    UVIndex(response.city.coord.lat,response.city.coord.lon);
-    forecast(response.id);
-    if(response.cod == 200){
-      searchCity=JSON.parse(localStorage.getItem("cityname"));
-      console.log(searchCity)
-      if(searchCity == null){
-        searchCity = [];
-        searchCity.push(city.toLocaleDateString()
-        );
-        localStorage.setItem("cityname", JSON.stringify(searchCity));
-        addToList(city);
-      } else {
-        if (find(city)>0){
-          searchCity.push(city.toUpperCase());
-          localStorage.setItem("cityname", JSON.stringify(searchCity));
-          addToList(city);
-        }
-      }
-    }
 
   });
 }
 
+// uvIndex not responding
 function UVIndex (ln,lt) {
   var uniUrl = "http://api.openweathermap.org/data/2.5/uvi?appid=" + apiKey + "&lon=" + ln + "&lat=" + lt;
   $.ajax({
@@ -89,8 +72,25 @@ function UVIndex (ln,lt) {
   }).then(function (response) {
     console.log(response);
     $(uvIndex).html(response.value);
+
+    uvIndex
+    text(response.city.coord.lat, response.city.coord.lat)
   });
 }
+
+// 5 day forcast
+function forcast (cityid){
+  var urlReq2 = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityid + "&units=imperial" + "&appid=" + apiKey;
+  $.ajax({
+    url: urlReq2,
+    method: 'GET',
+  }).then(function (response) {
+    console.log(response);
+
+
+  });
+}
+
 
 $("#search-button").on("click",displayWeather);
 
