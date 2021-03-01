@@ -30,7 +30,11 @@ function displayWeather(event) {
 }
 
 function currentWeather (city){
-  var urlReq = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apiKey;
+  var urlReq = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial" + "&appid=" + apiKey;
+
+  var urlReq2 = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial" + "&appid=" + apiKey;
+  console.log(urlReq2);
+
   $.ajax ({
     url:urlReq,
     method: "GET",
@@ -39,18 +43,19 @@ function currentWeather (city){
 
     console.log(response);
 
-    var weatherIcon= response.weather[0].icon;
+    currentTemp
+    .text(response.list[0].main.temp + " F")
+
+    var weatherIcon= response.list[0].weather[0].icon;
     var iconURL = "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
 
-    var date = newDate (response.dt*1000).toLocaleDateString();
+    var date = currentDate.text(new Date().getDate())
     $(currentCity).html(response.name + "("+date+")" + "<img src=" + iconURL + ">");
 
-    var fahrenheitTemp = (response.main.temp - 273.15) * 1.80 + 32;
-    $(currentTemp).html((fahrenheitTemp).toFixed(2)+"&#8457");
-    $(currentHumidity).html(response.main.humidity+"%");
+    $(currentHumidity).html(response.list[0].main.humidity+"%");
     
-    var windSpeed = response.wind.speed;
-    var windMph = (ws*2.237).toFixed(1);
+    var windSpeed = response.list[0].wind.speed;
+    var windMph = (windSpeed*2.237).toFixed(1);
     $(currentWindSpeed).html(windMph + "MPH")
 
     UVIndex(response.coord.lon,response.coord.lat);
@@ -73,9 +78,10 @@ function currentWeather (city){
       }
     }
 
-
   });
 }
+
+
 
 $("#search-button").on("click",displayWeather);
 
