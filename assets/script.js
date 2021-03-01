@@ -7,85 +7,75 @@ var currentWindSpeed = $("#wind-speed");
 var uvIndex = $("#uv-index");
 var currentDate = $("#today");
 var currentTemp = $("#weather");
-var sCity = [];
+var searchCity = [];
 var city = "";
 
 function find(c){
-  for (var i=0; i<sCity.length; i++){
-    if(c.toUpperCase()===sCity[i]){
+  for (var i=0; i<searchCity.length; i++){
+    if(c.toUpperCase()===searchCity[i]){
       return -1;
     }
   }
   return 1;
 }
 
-function handleSearchFormSubmit() {
+var apiKey = "9c6df7d93197a62075c56f857ce0bf62";
 
-  // Weather API 
-  var apiKey = "9c6df7d93197a62075c56f857ce0bf62";
+function displayWeather(event) {
+  event.preventDefault();
+ if(searchFormEl.val().trim()!==""){
+   city=searchFormEl.val().trim();
+   currentWeather(city);
+ }
+}
 
-  function displayWeather(event){
-    event.preventDefault();
-    if(searchFormEl.val().trim()!=="") {
-      city=searchFormEl.val().trim();
-      currentTemp(city);
-    }
-  }
-
-  var city = searchFormEl.val()
-  var urlRequest = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=imperial&appid=9c6df7d93197a62075c56f857ce0bf62`                   
-
-  var urlRequest2 = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=9c6df7d93197a62075c56f857ce0bf62`                   
-  console.log(urlRequest2)
+function currentWeather (city){
+  var urlReq = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" + apiKey;
+  $.ajax ({
+    url:urlReq,
+    method: "GET",
+  }).then(function(response){
 
 
-
-  $.ajax({
-    url: urlRequest,
-    method: 'GET',
-  }).then(function (response) {
-    console.log('Ajax Reponse \n-------------');
     console.log(response);
-    var weatherIcon = response.weather[0].icon;
-    var iconUrl= "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
 
-    currentDate.text(new Date().getDate("M/D/YYYY"))
-    currentTemp
-  .text(response.list[0].main.temp + " F")
+    var weatherIcon= response.weather[0].icon;
+    var iconURL = "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
 
-    for(const data of response.list) {
-      console.log(data);
-      if(data.dt_txt.indexOf("12:00:00")!== -1) {
-        console.log(data.dt_txt);
-         currentDate.text(new Date().getDate())
-         currentTemp
-        .text(data.main.temp + " F")
+    var date = newDate (response.dt*1000).toLocaleDateString();
+    $(currentCity).html(response.name + "("+date+")" + "<img src=" + iconURL + ">");
+
+    var fahrenheitTemp = (response.main.temp - 273.15) * 1.80 + 32;
+    $(currentTemp).html((fahrenheitTemp).toFixed(2)+"&#8457");
+    $(currentHumidity).html(response.main.humidity+"%");
+    
+    var windSpeed = response.wind.speed;
+    var windMph = (ws*2.237).toFixed(1);
+    $(currentWindSpeed).html(windMph + "MPH")
+
+    UVIndex(response.coord.lon,response.coord.lat);
+    forecast(response.id);
+    if(response.cod == 200){
+      searchCity=JSON.parse(localStorage.getItem("cityname"));
+      console.log(searchCity)
+      if(searchCity == null){
+        searchCity = [];
+        searchCity.push(city.toLocaleDateString()
+        );
+        localStorage.setItem("cityname", JSON.stringify(searchCity));
+        addToList(city);
+      } else {
+        if (find(city)>0){
+          searchCity.push(city.toUpperCase());
+          localStorage.setItem("cityname", JSON.stringify(searchCity));
+          addToList(city);
+        }
       }
-       
-      // var weatherIcon = $("<img>");
-      //   weatherIcon.attr(
-      //     "src",
-          
-      //     "http://openweathermap.org/img/wn/" + weather[0].ui-icon + ".png", 
-            
-      //     console.log(icon),
-      //   console.log(weatherIcon)
-      //   )
-      //     // + weather.weather[0].icon + ".png"
-      //   $("#currentDate-icon").empty();
-      //   $("#currentDate-icon").append(weatherIcon);
-
     }
+
 
   });
 }
-searchButton.on('click', () => {
-  handleSearchFormSubmit()
-});
 
-// add local storage to save previous search 
-// Weather need to include full UV index 
-// depending on the weather UV index color will need to change > use css, three different colors
-// Weather must include 5 day forcast 
-// 
+$("#search-button").on("click",displayWeather);
 
