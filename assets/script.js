@@ -58,7 +58,7 @@ function currentWeather (city){
     var windMph = (windSpeed*2.237).toFixed(1);
     $(currentWindSpeed).html(windMph + "MPH")
 
-    UVIndex(response.coord.lon,response.coord.lat);
+    UVIndex(response.city.coord.lat,response.city.coord.lon);
     forecast(response.id);
     if(response.cod == 200){
       searchCity=JSON.parse(localStorage.getItem("cityname"));
@@ -81,7 +81,16 @@ function currentWeather (city){
   });
 }
 
-
+function UVIndex (ln,lt) {
+  var uniUrl = "http://api.openweathermap.org/data/2.5/uvi?appid=" + apiKey + "&lon=" + ln + "&lat=" + lt;
+  $.ajax({
+    url: uniUrl,
+    method: 'GET',
+  }).then(function (response) {
+    console.log(response);
+    $(uvIndex).html(response.value);
+  });
+}
 
 $("#search-button").on("click",displayWeather);
 
