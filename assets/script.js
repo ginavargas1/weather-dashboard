@@ -54,29 +54,34 @@ function currentWeather (city){
     var windSpeed = response.wind.speed;
     var windMph = (windSpeed*2.237).toFixed(1);
     $(currentWindSpeed).html(windMph + "MPH")
-     
-    // uvIndex (response.coord.lon, response.coord.lat);
-    // forcast(response.id);
-    // if else statement goes below
-
+    
+    // uv index
+    var lat = response.coord.lat;
+    var lon = response.coord.lat;
+    $(uvIndex).html(lat,lon);
 
   });
 }
 
-// uvIndex not responding
-function UVIndex (ln,lt) {
-  var uniUrl = "http://api.openweathermap.org/data/2.5/uvi?appid=" + apiKey + "&lon=" + ln + "&lat=" + lt;
-  $.ajax({
-    url: uniUrl,
-    method: 'GET',
-  }).then(function (response) {
-    console.log(response);
-    $(uvIndex).html(response.value);
+    // uvIndex not responding
+    function uvIndex (lat,lon) {
+      var uniUrl = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
+      
+      $.ajax({
+        url: uniUrl,
+        method: 'GET',
+      }).then(function (response) {
+        $(uvIndex).html(response.value);
 
-    uvIndex
-    text(response.city.coord.lat, response.city.coord.lat)
-  });
-}
+        
+      });
+ 
+            // uvIndex (response.coord.lon, response.coord.lat);
+            // forcast(response.id);
+            // if else statement goes below
+
+    }
+
 
 // 5 day forcast
 function forcast (cityid){
