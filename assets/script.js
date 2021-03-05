@@ -4,15 +4,18 @@ var searchButton = $("#search-button");
 var currentCity = $("#current-city");
 var currentHumidity = $("#humidity");
 var currentWindSpeed = $("#wind-speed");
-var uvIndex = $("#uv-index");
+var uvIndexBox = $("#uv-index");
 var currentDate = $("#today");
 var currentTemp = $("#weather");
 var searchCity = [];
 var city = "";
+var lat;
+var lon;
 
-function find(c){
-  for (var i=0; i<searchCity.length; i++){
-    if(c.toUpperCase()===searchCity[i]){
+
+function find(c) {
+  for (var i = 0; i < searchCity.length; i++) {
+    if (c.toUpperCase() === searchCity[i]) {
       return -1;
     }
   }
@@ -23,79 +26,77 @@ var apiKey = "9c6df7d93197a62075c56f857ce0bf62";
 
 function displayWeather(event) {
   event.preventDefault();
- if(searchFormEl.val().trim()!==""){
-   city=searchFormEl.val().trim();
-   currentWeather(city);
- }
+  if (searchFormEl.val().trim() !== "") {
+    city = searchFormEl.val().trim();
+    //currentWeather(city);
+    currentWeather(city)
+
+  }
 }
 
-function currentWeather (city){
-  var urlReq = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial" + "&appid=" + apiKey;
+function currentWeather(city) {
+  var urlReq = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&units=imperial" + "&appid=" + apiKey;
 
-  $.ajax ({
-    url:urlReq,
+  $.ajax({
+    url: urlReq,
     method: "GET",
-  }).then(function(response){
+  }).then(function (response) {
 
 
     console.log(response);
 
     currentTemp
-    .text(response.main.temp_max + " F")
+      .text(response.list[0].main.temp_max + " F")
 
-    var weatherIcon= response.weather[0].icon;
+    var weatherIcon = response.list[0].weather[0].icon;
     var iconURL = "http://openweathermap.org/img/wn/" + weatherIcon + "@2x.png";
 
-    var date = currentDate.text(new Date().getDate())
-    $(currentCity).html(response.name + "("+date+")" + "<img src=" + iconURL + ">");
+    // var date = currentDate.text(new Date().getDate())
+    var date = new Date((response.list[0].dt_txt))
+    $(currentCity).html(response.city.name + "(" + date + ")" + "<img src=" + iconURL + ">");
 
-    $(currentHumidity).html(response.main.humidity+"%");
-    
-    var windSpeed = response.wind.speed;
-    var windMph = (windSpeed*2.237).toFixed(1);
-    $(currentWindSpeed).html(windMph + "MPH")
-    
-    // uv index
-    var lat = response.coord.lat;
-    var lon = response.coord.lat;
-    $(uvIndex).html(lat,lon);
+    $(currentHumidity).html(response.list[0].main.humidity + "%");
 
-  });
-}
+    var windSpeed = response.list[0].wind.speed;
+    var windMph = (windSpeed * 2.237).toFixed(1);
+    currentWindSpeed.html(windMph + "MPH")
 
-    // uvIndex not responding
-    function uvIndex (lat,lon) {
-      var uniUrl = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
-      
-      $.ajax({
-        url: uniUrl,
-        method: 'GET',
-      }).then(function (response) {
-        $(uvIndex).html(response.value);
-
-        
-      });
- 
-            // uvIndex (response.coord.lon, response.coord.lat);
-            // forcast(response.id);
-            // if else statement goes below
-
+    for (let i = 0; i < 20; i += 4) {
+      $(`#future-date${i}`).html(response.list[i].dt_txt)
+      $(`#future-image${i}`).html(`<img src=${iconURL}>`)
+      $(`#future-temp${i}`).html(response.list[i].main.temp_max + "F");
+      $(`#future-humidity${i}`).html(response.list[i].main.humidity + "%");
     }
 
 
-// 5 day forcast
-function forcast (cityid){
-  var urlReq2 = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityid + "&units=imperial" + "&appid=" + apiKey;
-  $.ajax({
-    url: urlReq2,
-    method: 'GET',
-  }).then(function (response) {
-    console.log(response);
-
-
+    // uv index
+    lat = response.city.coord.lat;
+    lon = response.city.coord.lon;
+    //$(uvIndex).html(lat, lon);
+    uvIndex()
   });
 }
 
+// uvIndex not responding
+function uvIndex() {
+  var uviUrl = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=" + apiKey;
 
-$("#search-button").on("click",displayWeather);
+  $.ajax({
+    url: uviUrl,
+    method: 'GET',
+  }).then(function (response) {
+
+    console.log(response);
+
+    uvIndexBox.html(response.value);
+
+
+  });
+
+}
+
+
+
+
+$("#search-button").on("click", displayWeather);
 
